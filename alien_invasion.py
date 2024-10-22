@@ -12,7 +12,7 @@ class AlienInvasion:
         pygame.init()
         
         screen = pygame.display.set_mode(self.settings.mode)
-        pygame.display.set_caption("Alien Invasion by Daryna")
+        pygame.display.set_caption("Alien Invasion")
         ship=Ship(self.settings,screen)
         while True:
             gf.check_events(self.settings,ship)
