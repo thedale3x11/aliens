@@ -1,5 +1,5 @@
-import sys
 import pygame
+from pygame.sprite import Group
 from settings import Settings
 from ship import Ship
 import game_functions as gf
@@ -14,10 +14,12 @@ class AlienInvasion:
         screen = pygame.display.set_mode(self.settings.mode)
         pygame.display.set_caption("Alien Invasion")
         ship=Ship(self.settings,screen)
+        bullets=Group()
         while True:
-            gf.check_events(self.settings,ship)
+            gf.check_events(self.settings,screen,ship,bullets)
             ship.update()
-            gf.update_screen(self.settings,screen,ship)
+            bullets.update()
+            gf.update_screen(self.settings,screen,ship,bullets)
 
 if __name__ == '__main__':    
     ai = AlienInvasion()    
