@@ -19,8 +19,13 @@ class AlienInvasion:
             gf.check_events(self.settings,screen,ship,bullets)
             ship.update()
             bullets.update()
+            for bullet in bullets.copy():
+                if bullet.rect.bottom <= 0:
+                    bullets.remove(bullet)
+            print(len(bullets))
+            
             gf.update_screen(self.settings,screen,ship,bullets)
-
+            
 if __name__ == '__main__':    
     ai = AlienInvasion()    
     ai.run_game()
