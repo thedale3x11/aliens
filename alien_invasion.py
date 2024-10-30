@@ -18,10 +18,7 @@ class AlienInvasion:
         while True:
             gf.check_events(self.settings,screen,ship,bullets)
             ship.update()
-            bullets.update()
-            for bullet in bullets.copy():
-                if bullet.rect.bottom <= 0:
-                    bullets.remove(bullet)
+            gf.update_bullets(bullets)
             print(len(bullets))
             
             gf.update_screen(self.settings,screen,ship,bullets)
