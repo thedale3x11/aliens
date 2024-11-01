@@ -1,7 +1,7 @@
 import sys
 import pygame
 from bullet import Bullet
-
+from alien import Alien
 def check_events(settings,screen,ship,bullets):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -11,12 +11,14 @@ def check_events(settings,screen,ship,bullets):
         elif event.type == pygame.KEYUP:
             check_keyup_events(event,settings,screen,ship,bullets)
 
-def update_screen(settings,screen,ship,bullets):
+def update_screen(settings,screen,ship,aliens,bullets):
     screen.fill(settings.bg_color) 
     for bullet in bullets.sprites():
         bullet.draw_bullet()
 
     ship.blitme()
+    #alien.blitme()
+    aliens.draw(screen)
 
     pygame.display.flip()
 
@@ -56,3 +58,15 @@ def check_keyup_events(event,settings,screen,ship,bullets):
         ship.moving_up = False
     elif event.key == pygame.K_DOWN:
         ship.moving_down = False
+
+def create_fleet(settings,screen,aliens):
+    alien=Alien(settings,screen)
+    alien_width=alien.rect.width
+    available_aliens_x=settings.screen_width - 2 *alien_width
+    number_aliens_x=int(available_aliens_x/(2 * alien_width))
+
+    for alien_number in range(number_aliens_x):
+        alien=Alien(settings,screen)
+        alien_x=alien_width+2*alien_width*alien_number
+        alien.rect.x=alien_x
+        aliens.add(alien)
