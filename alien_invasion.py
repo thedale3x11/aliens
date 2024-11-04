@@ -20,7 +20,6 @@ class AlienInvasion:
         #alien=Alien(self.settings,screen)
         gf.create_fleet(self.settings,screen,ship,aliens)
         while True:
-            gf.create_fleet(self.settings,screen,ship,aliens)
             gf.check_events(self.settings,screen,ship,bullets)
             ship.update()
             gf.update_bullets(bullets)
