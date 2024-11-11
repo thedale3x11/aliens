@@ -9,7 +9,7 @@ def check_events(settings,screen,ship,bullets):
         elif event.type == pygame.KEYDOWN:
            check_keydown_events(event,settings,screen,ship,bullets)
         elif event.type == pygame.KEYUP:
-            check_keyup_events(event,settings,screen,ship,bullets)
+            check_keyup_events(event,ship)
 
 def update_screen(settings,screen,ship,aliens,bullets):
     screen.fill(settings.bg_color) 
@@ -17,7 +17,6 @@ def update_screen(settings,screen,ship,aliens,bullets):
         bullet.draw_bullet()
 
     ship.blitme()
-    #alien.blitme()
     aliens.draw(screen)
 
     pygame.display.flip()
@@ -49,7 +48,7 @@ def check_keydown_events(event,settings,screen,ship,bullets):
             new_bullet2 = Bullet(settings,screen,ship,centerx_factor=-15)
             bullets.add(new_bullet2)
 
-def check_keyup_events(event,settings,screen,ship,bullets):
+def check_keyup_events(event,ship):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = False
     elif event.key == pygame.K_LEFT:
@@ -60,7 +59,7 @@ def check_keyup_events(event,settings,screen,ship,bullets):
         ship.moving_down = False
 
 def create_fleet(settings,screen,ship,aliens):
-    alien=Alien(settings,screen)
+    alien=Alien(settings,screen,name='first')
 
     number_aliens_x=get_number_aliens_x(settings,alien.rect.width)
     number_rows=get_number_rows(settings,ship.rect.height,alien.rect.height)
@@ -68,6 +67,7 @@ def create_fleet(settings,screen,ship,aliens):
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
             create_alien(settings,screen,aliens,alien_number,row_number)
+            print(f"aliens count:{alien_number}")
 
 def get_number_aliens_x(settings,alien_width):
     available_aliens_x=settings.screen_width - 2 *alien_width
@@ -75,14 +75,28 @@ def get_number_aliens_x(settings,alien_width):
     return number_aliens_x
 
 def create_alien(settings,screen,aliens,alien_number,row_number):
-    alien=Alien(settings,screen)
-    alien_width=alien.rect.width
-    alien_x=alien_width+2*alien_width*alien_number
-    alien.rect.x=alien_x
+    alien=Alien(settings,screen,name=str(row_number)+"-"+str(alien_number))
+    alien.rect.x=alien.rect.width+2*alien.rect.width*alien_number
     alien.rect.y=alien.rect.height+2*alien.rect.height*row_number
     aliens.add(alien)
 
 def get_number_rows(settings,ship_height,alien_height):
     available_spase_y=(settings.screen_height-(3*alien_height)-ship_height)
     number_rows=int(available_spase_y/(2*alien_height))
-    return number_rows
+    
+    return 3 if number_rows > 3 else number_rows
+    
+def update_aliens(settings,aliens):
+    check_fleet_edges(settings,aliens)
+    aliens.update()
+
+def check_fleet_edges(settings,aliens):
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_diriction(settings,aliens)
+            break
+
+def change_fleet_diriction(settings,aliens):
+    for alien in aliens.sprites():
+        alien.rect.y += settings.fleet_drop_speed
+    settings.fleet_direction *= -1
