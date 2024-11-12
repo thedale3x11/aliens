@@ -23,9 +23,8 @@ class AlienInvasion:
         while True:
             gf.check_events(self.settings,screen,ship,bullets)
             ship.update()
-            gf.update_bullets(bullets)
-            gf.update_aliens(self.settings,aliens)
-            
+            gf.update_bullets(self.settings,screen,ship,aliens,bullets)
+            gf.update_aliens(self.settings,ship,aliens)
             gf.update_screen(self.settings,screen,ship,aliens,bullets)
             
 if __name__ == '__main__':

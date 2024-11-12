@@ -2,6 +2,7 @@ import sys
 import pygame
 from bullet import Bullet
 from alien import Alien
+
 def check_events(settings,screen,ship,bullets):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -21,11 +22,18 @@ def update_screen(settings,screen,ship,aliens,bullets):
 
     pygame.display.flip()
 
-def update_bullets(bullets):
+def update_bullets(settings,screen,ship,aliens,bullets):
     bullets.update()
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+    check_bullet_alien_collision(settings,screen,ship,aliens,bullets)
+
+def check_bullet_alien_collision(settings,screen,ship,aliens,bullets):
+    collisions=pygame.sprite.groupcollide(bullets,aliens,True,True)
+    if len(aliens)==0:
+        bullets.empty()
+        create_fleet(settings,screen,ship,aliens)
 
 def check_keydown_events(event,settings,screen,ship,bullets):
     if event.key == pygame.K_RIGHT:
@@ -67,12 +75,11 @@ def create_fleet(settings,screen,ship,aliens):
     for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
             create_alien(settings,screen,aliens,alien_number,row_number)
-            print(f"aliens count:{alien_number}")
 
 def get_number_aliens_x(settings,alien_width):
     available_aliens_x=settings.screen_width - 2 *alien_width
     number_aliens_x=int(available_aliens_x/(2 * alien_width))
-    return number_aliens_x
+    return number_aliens_x-1
 
 def create_alien(settings,screen,aliens,alien_number,row_number):
     alien=Alien(settings,screen,name=str(row_number)+"-"+str(alien_number))
@@ -86,16 +93,18 @@ def get_number_rows(settings,ship_height,alien_height):
     
     return 3 if number_rows > 3 else number_rows
     
-def update_aliens(settings,aliens):
+def update_aliens(settings,ship,aliens):
     check_fleet_edges(settings,aliens)
     aliens.update()
-
+    if pygame.sprite.spritecollideany(ship,aliens):
+        print("Ship hit!!!")
+        
 def check_fleet_edges(settings,aliens):
     for alien in aliens.sprites():
         if alien.check_edges():
             change_fleet_diriction(settings,aliens)
             break
-
+    
 def change_fleet_diriction(settings,aliens):
     for alien in aliens.sprites():
         alien.rect.y += settings.fleet_drop_speed
