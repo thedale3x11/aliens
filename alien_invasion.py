@@ -5,6 +5,7 @@ from ship import Ship
 from alien import Alien
 import game_functions as gf
 from game_stats import GameStats
+from button import Button
 
 class AlienInvasion:
     def __init__(self):
@@ -20,14 +21,15 @@ class AlienInvasion:
         aliens=Group()
         stats=GameStats(self.settings)
         gf.create_fleet(self.settings,screen,ship,aliens)
-        print()
+        play_button=Button(self.settings,screen,"Play")
+
         while True:
             gf.check_events(self.settings,screen,ship,bullets)
             if stats.game_active:
                 ship.update()
                 gf.update_bullets(self.settings,screen,ship,aliens,bullets)
                 gf.update_aliens(self.settings,stats,screen,ship,aliens,bullets)
-                gf.update_screen(self.settings,screen,ship,aliens,bullets)
+            gf.update_screen(self.settings,screen,stats,ship,aliens,bullets,play_button)
             
 if __name__ == '__main__':
     ai = AlienInvasion()    
