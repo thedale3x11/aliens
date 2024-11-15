@@ -24,7 +24,7 @@ class AlienInvasion:
         play_button=Button(self.settings,screen,"Play")
 
         while True:
-            gf.check_events(self.settings,screen,ship,bullets)
+            gf.check_events(self.settings,stats,screen,play_button,ship,aliens,bullets)
             if stats.game_active:
                 ship.update()
                 gf.update_bullets(self.settings,screen,ship,aliens,bullets)
