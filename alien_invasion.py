@@ -6,6 +6,7 @@ from alien import Alien
 import game_functions as gf
 from game_stats import GameStats
 from button import Button
+from scoreboard import Scoreboard
 
 class AlienInvasion:
     def __init__(self):
@@ -20,6 +21,9 @@ class AlienInvasion:
         bullets=Group()
         aliens=Group()
         stats=GameStats(self.settings)
+        sb=Scoreboard(self.settings,screen,stats)
+        
+
         gf.create_fleet(self.settings,screen,ship,aliens)
         play_button=Button(self.settings,screen,"Play")
 
@@ -27,9 +31,9 @@ class AlienInvasion:
             gf.check_events(self.settings,stats,screen,play_button,ship,aliens,bullets)
             if stats.game_active:
                 ship.update()
-                gf.update_bullets(self.settings,screen,ship,aliens,bullets)
+                gf.update_bullets(self.settings,screen,stats,sb,ship,aliens,bullets)
                 gf.update_aliens(self.settings,stats,screen,ship,aliens,bullets)
-            gf.update_screen(self.settings,screen,stats,ship,aliens,bullets,play_button)
+            gf.update_screen(self.settings,screen,stats,sb,ship,aliens,bullets,play_button)
             
 if __name__ == '__main__':
     ai = AlienInvasion()    
