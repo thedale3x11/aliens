@@ -30,7 +30,7 @@ class Ship():
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.rect.bottom += self.settings.ship_speed_factor
         
-    def tu_default_posityon(self):
+    def to_default_position(self):
         self.rect.centerx = self.default_posx
         self.rect.bottom = self.default_posy
 

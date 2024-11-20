@@ -13,7 +13,7 @@ def check_events(settings,stats,screen,play_button,ship,aliens,bullets):
             check_play_button(settings,screen,stats,play_button,mouse_x,mouse_y,ship,aliens,bullets)
 
         elif event.type == pygame.KEYDOWN:
-           check_keydown_events(event,settings,screen,ship,bullets)
+           check_keydown_events(event,settings,screen,ship,bullets,stats)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event,ship)
 
@@ -35,6 +35,7 @@ def update_bullets(settings,screen,stats,sb,ship,aliens,bullets):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
+    check_high_score(stats,sb)
     check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets)
 
 def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):
@@ -49,7 +50,7 @@ def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):
         settings.incraese_speed()
         create_fleet(settings,screen,ship,aliens)
 
-def check_keydown_events(event,settings,screen,ship,bullets):
+def check_keydown_events(event,settings,screen,ship,bullets,stats):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
@@ -61,7 +62,11 @@ def check_keydown_events(event,settings,screen,ship,bullets):
     elif event.key == pygame.K_q:
         sys.exit()
     elif event.key == pygame.K_r:
-        ship.tu_default_posityon()
+        ship.to_default_position()
+    elif event.key == pygame.K_p:
+        ship.to_default_position()   
+        stats.game_active=True        
+    
     elif event.key == pygame.K_SPACE:
         if len(bullets)< settings.bullets_allowed:    
             new_bullet1 = Bullet(settings,screen,ship)
@@ -148,7 +153,7 @@ def check_aliens_bottom(settings,stats,screen,ship,aliens,bullets):
 
 def check_play_button(settings,screen,stats,play_button,mouse_x,mouse_y,ship,aliens,bullets):
     button_clicked=play_button.rect.collidepoint(mouse_x,mouse_y)
-    if button_clicked and not stats.game_active:
+    if button_clicked and not stats.game_active:  
         settings.initialize_dynamic_settngs()
         pygame.mouse.set_visible(False)
         stats.reset_stats()
@@ -158,3 +163,9 @@ def check_play_button(settings,screen,stats,play_button,mouse_x,mouse_y,ship,ali
 
         create_fleet(settings,screen,ship,aliens)
         ship.center_ship()
+        
+
+def check_high_score(stats,sb):
+    if stats.score>stats.high_score:
+        stats.high_score=stats.score
+        sb.prep_high_score()
