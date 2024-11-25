@@ -20,6 +20,7 @@ class Ship():
         self.moving_up = False
         self.moving_down = False
     
+
     def update(self):
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.rect.centerx += self.settings.ship_speed_factor
@@ -30,12 +31,15 @@ class Ship():
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.rect.bottom += self.settings.ship_speed_factor
         
+
     def to_default_position(self):
         self.rect.centerx = self.default_posx
         self.rect.bottom = self.default_posy
 
+
     def blitme(self):
         self.screen.blit(self.image,self.rect)
+
 
     def center_ship(self):
         self.center=self.screen_rect.centerx

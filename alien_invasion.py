@@ -12,6 +12,7 @@ class AlienInvasion:
     def __init__(self):
         self.settings=Settings()
 
+
     def run_game(self):
         pygame.init()
         
@@ -28,7 +29,7 @@ class AlienInvasion:
         play_button=Button(self.settings,screen,"Play")
 
         while True:
-            gf.check_events(self.settings,stats,screen,play_button,ship,aliens,bullets)
+            gf.check_events(self.settings,stats,screen,sb,play_button,ship,aliens,bullets)
             if stats.game_active:
                 ship.update()
                 gf.update_bullets(self.settings,screen,stats,sb,ship,aliens,bullets)

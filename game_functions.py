@@ -4,18 +4,19 @@ import pygame
 from bullet import Bullet
 from alien import Alien
 
-def check_events(settings,stats,screen,play_button,ship,aliens,bullets):
+def check_events(settings,stats,screen,sb,play_button,ship,aliens,bullets):
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x,mouse_y=pygame.mouse.get_pos()
-            check_play_button(settings,screen,stats,play_button,mouse_x,mouse_y,ship,aliens,bullets)
+            check_play_button(settings,screen,stats,sb,play_button,mouse_x,mouse_y,ship,aliens,bullets)
 
         elif event.type == pygame.KEYDOWN:
-           check_keydown_events(event,settings,screen,ship,bullets,stats)
+           check_keydown_events(event,settings,screen,ship,bullets,stats,sb)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event,ship)
+
 
 def update_screen(settings,screen,stats,sb,ship,aliens,bullets,play_button):
     screen.fill(settings.bg_color) 
@@ -30,6 +31,7 @@ def update_screen(settings,screen,stats,sb,ship,aliens,bullets,play_button):
 
     pygame.display.flip()
 
+
 def update_bullets(settings,screen,stats,sb,ship,aliens,bullets):
     bullets.update()
     for bullet in bullets.copy():
@@ -37,6 +39,7 @@ def update_bullets(settings,screen,stats,sb,ship,aliens,bullets):
             bullets.remove(bullet)
     check_high_score(stats,sb)
     check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets)
+
 
 def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):
     collisions=pygame.sprite.groupcollide(bullets,aliens,True,True)
@@ -48,9 +51,13 @@ def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):
     if len(aliens)==0:
         bullets.empty()
         settings.incraese_speed()
+        stats.level+=1
+        sb.prep_level()
+
         create_fleet(settings,screen,ship,aliens)
 
-def check_keydown_events(event,settings,screen,ship,bullets,stats):
+
+def check_keydown_events(event,settings,screen,ship,bullets,stats,sb):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
@@ -65,8 +72,11 @@ def check_keydown_events(event,settings,screen,ship,bullets,stats):
         ship.to_default_position()
     elif event.key == pygame.K_p:
         ship.to_default_position()   
-        stats.game_active=True        
-    
+        stats.game_active=True  
+        stats.reset_stats()
+        sb.prep_score()  
+        sb.reset_level()
+
     elif event.key == pygame.K_SPACE:
         if len(bullets)< settings.bullets_allowed:    
             new_bullet1 = Bullet(settings,screen,ship)
@@ -74,6 +84,7 @@ def check_keydown_events(event,settings,screen,ship,bullets,stats):
 
             new_bullet2 = Bullet(settings,screen,ship,centerx_factor=-15)
             bullets.add(new_bullet2)
+
 
 def check_keyup_events(event,ship):
     if event.key == pygame.K_RIGHT:
@@ -85,6 +96,7 @@ def check_keyup_events(event,ship):
     elif event.key == pygame.K_DOWN:
         ship.moving_down = False
 
+
 def create_fleet(settings,screen,ship,aliens):
     alien=Alien(settings,screen,name='first')
 
@@ -95,10 +107,12 @@ def create_fleet(settings,screen,ship,aliens):
         for alien_number in range(number_aliens_x):
             create_alien(settings,screen,aliens,alien_number,row_number)
 
+
 def get_number_aliens_x(settings,alien_width):
     available_aliens_x=settings.screen_width - 2 *alien_width
     number_aliens_x=int(available_aliens_x/(2 * alien_width))
     return number_aliens_x-1
+
 
 def create_alien(settings,screen,aliens,alien_number,row_number):
     alien=Alien(settings,screen,name=str(row_number)+"-"+str(alien_number))
@@ -106,12 +120,14 @@ def create_alien(settings,screen,aliens,alien_number,row_number):
     alien.rect.y=alien.rect.height+2*alien.rect.height*row_number
     aliens.add(alien)
 
+
 def get_number_rows(settings,ship_height,alien_height):
     available_spase_y=(settings.screen_height-(3*alien_height)-ship_height)
     number_rows=int(available_spase_y/(2*alien_height))
     
     return 3 if number_rows > 3 else number_rows
     
+
 def update_aliens(settings,stats,screen,ship,aliens,bullets):
     check_aliens_bottom(settings,stats,screen,ship,aliens,bullets)
     
@@ -121,16 +137,19 @@ def update_aliens(settings,stats,screen,ship,aliens,bullets):
         ship_hit(settings,stats,screen,ship,aliens,bullets)
         print("Ship hit!!!")
         
+
 def check_fleet_edges(settings,aliens):
     for alien in aliens.sprites():
         if alien.check_edges():
             change_fleet_diriction(settings,aliens)
             break
     
+
 def change_fleet_diriction(settings,aliens):
     for alien in aliens.sprites():
         alien.rect.y += settings.fleet_drop_speed
     settings.fleet_direction *= -1
+
 
 def ship_hit(settings,stats,screen,ship,aliens,bullets):
     if stats.ship_left > 0:
@@ -144,6 +163,7 @@ def ship_hit(settings,stats,screen,ship,aliens,bullets):
         stats.game_active=False
         pygame.mouse.set_visible(False)
 
+
 def check_aliens_bottom(settings,stats,screen,ship,aliens,bullets):
     screen_rect=screen.get_rect()
     for alien in aliens.sprites():
@@ -151,13 +171,19 @@ def check_aliens_bottom(settings,stats,screen,ship,aliens,bullets):
             ship_hit(settings,stats,screen,ship,aliens,bullets)
             break
 
-def check_play_button(settings,screen,stats,play_button,mouse_x,mouse_y,ship,aliens,bullets):
+
+def check_play_button(settings,screen,stats,sb,play_button,mouse_x,mouse_y,ship,aliens,bullets):
     button_clicked=play_button.rect.collidepoint(mouse_x,mouse_y)
     if button_clicked and not stats.game_active:  
         settings.initialize_dynamic_settngs()
         pygame.mouse.set_visible(False)
         stats.reset_stats()
         stats.game_active=True
+
+        sb.prep_score()
+        sb.prep_high_score()
+        sb.prep_level()
+
         aliens.empty()
         bullets.empty()
 

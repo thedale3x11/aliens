@@ -18,11 +18,13 @@ class Settings:
 
         self.ship_limit=3
     
+
     def initialize_dynamic_settngs(self):
         self.ship_speed_factor=1.5
         self.bullet_speed_factor=3
         self.alien_speed_factor=1
         self.alien_points=50
+
 
     def incraese_speed(self):
         self.ship_speed_factor*=self.speedup_scale
