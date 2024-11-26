@@ -33,7 +33,7 @@ class AlienInvasion:
             if stats.game_active:
                 ship.update()
                 gf.update_bullets(self.settings,screen,stats,sb,ship,aliens,bullets)
-                gf.update_aliens(self.settings,stats,screen,ship,aliens,bullets)
+                gf.update_aliens(self.settings,stats,sb,screen,ship,aliens,bullets)
             gf.update_screen(self.settings,screen,stats,sb,ship,aliens,bullets,play_button)
             
 if __name__ == '__main__':
