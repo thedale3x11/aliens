@@ -2,10 +2,10 @@ import pygame
 from pygame.sprite import Sprite
 
 class Ship(Sprite):
-    def __init__(self,settings,screen):
+    def __init__(self,settings,screen,image):
         super(Ship,self).__init__()
         self.screen = screen
-        self.image = pygame.image.load("images/alien_ship.png")
+        self.image = pygame.image.load(image)
         self.settings = settings
 
         self.rect = self.image.get_rect()

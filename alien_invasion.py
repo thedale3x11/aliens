@@ -18,11 +18,11 @@ class AlienInvasion:
         
         screen = pygame.display.set_mode(self.settings.mode)
         pygame.display.set_caption("Alien Invasion")
-        ship=Ship(self.settings,screen)
+        ship=Ship(self.settings,screen,self.settings.ship_image_name)
         bullets=Group()
         aliens=Group()
         stats=GameStats(self.settings)
-        sb=Scoreboard(self.settings,screen,stats)
+        sb=Scoreboard(self.settings,screen,stats,ship)
         
 
         gf.create_fleet(self.settings,screen,ship,aliens)

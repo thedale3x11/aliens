@@ -17,6 +17,8 @@ class Settings:
         self.fleet_direction=1
 
         self.ship_limit=3
+        self.ship_image_name="images/alien_ship.png"
+        self.ship_score_image_name="images/alien_ship_score.png"
     
 
     def initialize_dynamic_settngs(self):
