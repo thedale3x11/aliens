@@ -52,7 +52,7 @@ def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):
         bullets.empty()
         settings.incraese_speed()
         stats.level+=1
-        sb.prep_level()
+        sb.prep_score()
         sb.prep_ships()
 
         create_fleet(settings,screen,ship,aliens)
@@ -185,8 +185,7 @@ def check_play_button(settings,screen,stats,sb,play_button,mouse_x,mouse_y,ship,
         stats.game_active=True
 
         sb.prep_score()
-        sb.prep_high_score()
-        sb.prep_level()
+        sb.prep_score()
         sb.prep_ships()
 
         aliens.empty()
@@ -199,4 +198,4 @@ def check_play_button(settings,screen,stats,sb,play_button,mouse_x,mouse_y,ship,
 def check_high_score(stats,sb):
     if stats.score>stats.high_score:
         stats.high_score=stats.score
-        sb.prep_high_score()
+        sb.prep_score()
