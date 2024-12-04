@@ -3,6 +3,7 @@ from time import sleep
 import pygame
 from bullet import Bullet
 from alien import Alien
+import random
 
 def check_events(settings,stats,screen,sb,play_button,ship,aliens,bullets):
     for event in pygame.event.get():
@@ -18,9 +19,11 @@ def check_events(settings,stats,screen,sb,play_button,ship,aliens,bullets):
             check_keyup_events(event,ship)
 
 
-def update_screen(settings,screen,stats,sb,ship,aliens,bullets,play_button):
+def update_screen(settings,screen,stats,sb,ship,aliens,bullets,alien_bullets,play_button):
     screen.fill(settings.bg_color) 
     for bullet in bullets.sprites():
+        bullet.draw_bullet()
+    for bullet in alien_bullets.sprites():
         bullet.draw_bullet()
 
     ship.blitme()
@@ -39,6 +42,33 @@ def update_bullets(settings,screen,stats,sb,ship,aliens,bullets):
             bullets.remove(bullet)
     check_high_score(stats,sb)
     check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets)
+
+
+
+def update_alien_bullets(settings,screen,stats,sb,ship,aliens,alien_bullets):
+
+    if len(alien_bullets)==0:
+        alien_idx=random.randint(0,len(aliens))
+        cur_idx=0
+        for alien in aliens.copy():
+            if alien_idx==cur_idx:
+                new_bullet = Bullet(settings,screen,alien,direction=0,speed_factor=1)
+                alien_bullets.add(new_bullet)
+            cur_idx+=1
+        
+
+    alien_bullets.update()
+    for bullet in alien_bullets.copy():
+        if bullet.rect.y > settings.screen_height:
+            alien_bullets.remove(bullet)
+    #check_high_score(stats,sb)
+    check_alien_bullet_ship_collision(settings,screen,stats,sb,ship,aliens,alien_bullets)
+    
+def check_alien_bullet_ship_collision(settings,screen,stats,sb,ship,aliens,bullets):
+    
+    if pygame.sprite.spritecollideany(ship,bullets):
+        ship_hit(settings,stats,sb,screen,ship,aliens,bullets)
+        print("Ship hit!!!")
 
 
 def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):

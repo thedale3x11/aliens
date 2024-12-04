@@ -20,6 +20,7 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
         ship=Ship(self.settings,screen,self.settings.ship_image_name)
         bullets=Group()
+        alien_bullets=Group()
         aliens=Group()
         stats=GameStats(self.settings)
         sb=Scoreboard(self.settings,screen,stats,ship)
@@ -33,8 +34,9 @@ class AlienInvasion:
             if stats.game_active:
                 ship.update()
                 gf.update_bullets(self.settings,screen,stats,sb,ship,aliens,bullets)
+                gf.update_alien_bullets(self.settings,screen,stats,sb,ship,aliens,alien_bullets)
                 gf.update_aliens(self.settings,stats,sb,screen,ship,aliens,bullets)
-            gf.update_screen(self.settings,screen,stats,sb,ship,aliens,bullets,play_button)
+            gf.update_screen(self.settings,screen,stats,sb,ship,aliens,bullets,alien_bullets,play_button)
             
 if __name__ == '__main__':
     ai = AlienInvasion()    
