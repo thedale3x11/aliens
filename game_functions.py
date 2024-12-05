@@ -14,7 +14,7 @@ def check_events(settings,stats,screen,sb,play_button,ship,aliens,bullets):
             check_play_button(settings,screen,stats,sb,play_button,mouse_x,mouse_y,ship,aliens,bullets)
 
         elif event.type == pygame.KEYDOWN:
-           check_keydown_events(event,settings,screen,ship,bullets,stats,sb)
+           check_keydown_events(event,settings,screen,ship,bullets,stats,sb,aliens)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event,ship)
 
@@ -88,7 +88,7 @@ def check_bullet_alien_collision(settings,screen,stats,sb,ship,aliens,bullets):
         create_fleet(settings,screen,ship,aliens)
 
 
-def check_keydown_events(event,settings,screen,ship,bullets,stats,sb):
+def check_keydown_events(event,settings,screen,ship,bullets,stats,sb,aliens):
     if event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
@@ -106,9 +106,10 @@ def check_keydown_events(event,settings,screen,ship,bullets,stats,sb):
         ship.to_default_position()   
         stats.game_active=True  
         stats.reset_stats()
-        sb.prep_score()  
         sb.reset_level()
+        aliens.empty()
         sb.prep_ships()
+        sb.prep_score()  
 
     elif event.key == pygame.K_SPACE:
         if len(bullets)< settings.bullets_allowed:    

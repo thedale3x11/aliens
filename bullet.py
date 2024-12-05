@@ -11,7 +11,6 @@ class Bullet(Sprite):
         self.rect.top=ship.rect.top
         
         self.y=float(self.rect.y)
-        print(self.y)
         self.color=settings.bullet_color
         if speed_factor==0:
             self.speed_factor=settings.bullet_speed_factor
