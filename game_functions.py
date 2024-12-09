@@ -48,20 +48,20 @@ def update_bullets(settings,screen,stats,sb,ship,aliens,bullets):
 def update_alien_bullets(settings,screen,stats,sb,ship,aliens,alien_bullets):
 
     if len(alien_bullets)==0:
-        alien_idx=random.randint(0,len(aliens))
-        cur_idx=0
-        for alien in aliens.copy():
-            if alien_idx==cur_idx:
-                new_bullet = Bullet(settings,screen,alien,direction=0,speed_factor=1)
-                alien_bullets.add(new_bullet)
-            cur_idx+=1
+        for l in range(0,stats.level):
+            alien_idx=random.randint(0,len(aliens))
+            cur_idx=0
+            for alien in aliens.copy():
+                if alien_idx==cur_idx:
+                    new_bullet = Bullet(settings,screen,alien,direction=0,speed_factor=0.2)
+                    alien_bullets.add(new_bullet)
+                cur_idx+=1
         
 
     alien_bullets.update()
     for bullet in alien_bullets.copy():
         if bullet.rect.y > settings.screen_height:
             alien_bullets.remove(bullet)
-    #check_high_score(stats,sb)
     check_alien_bullet_ship_collision(settings,screen,stats,sb,ship,aliens,alien_bullets)
     
 def check_alien_bullet_ship_collision(settings,screen,stats,sb,ship,aliens,bullets):
@@ -143,7 +143,7 @@ def create_fleet(settings,screen,ship,aliens):
 
 
 def get_number_aliens_x(settings,alien_width):
-    available_aliens_x=settings.screen_width - 2 *alien_width
+    available_aliens_x=settings.screen_width - 5 *alien_width
     number_aliens_x=int(available_aliens_x/(2 * alien_width))
     return number_aliens_x-1
 
