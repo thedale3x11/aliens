@@ -1,8 +1,8 @@
 class Settings:
     def __init__(self):
         self.bg_color=(0,0,0)
-        self.screen_width=800
-        self.screen_height=600
+        self.screen_width=1200
+        self.screen_height=700
         self.mode=(self.screen_width,self.screen_height)
         
         self.bullet_width=3
